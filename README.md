@@ -1,0 +1,98 @@
+# dqm-content-usqcore-2026
+This repository contains example dQM content built using US Quality Core v1.0.0, US Core v9.0.0, and CarinBB v2.1.1 models. The examples have been developed purely for testing purposes to demonstrate advanced dQM measure specification capability. Measure content in this repository was developed manually using the VSCode CQL Authoring plugin.
+
+> NOTE: The content in this IG was initially copied from [dqm-content-cms-2026](https://github.com/cqframework/dqm-content-cms-2026) to serve as a development environment for updating these measures to use US Core 9.0.0 and US Quality Core 1.0.0 (balloting in the September 2026 cycle).
+
+Commits to this repository will automatically trigger a build of the continuous integration build, available here:
+
+https://build.fhir.org/ig/cqframework/dqm-content-usqcore-2026
+
+## Terminology Expectations
+
+The measures in this repository use the value sets from the dQM FHIR 2025 update as a starting point, but add some additional terminology expectations as part of the draft development of advanced measures in this repository. The terminology package in support of the 2025 dQM FHIR measures is:
+
+http://cts.nlm.nih.gov/fhir/Library/ecqm-fhir-update-2025
+
+> NOTE: The value sets in this repository are limited to expansions of 1000. To obtain the full expansions requires an NLM license and can be downloaded from the Value Set Authority Center downloads site: https://vsac.nlm.nih.gov/download/manifest?rel=20251117&res=dqm.vs.20251117.json
+
+## Repository Structure
+
+This repository is setup like any HL7 FHIR IG project but also includes the CQL files and test data which means the file structure will be as follows:
+
+```
+   |-- _genonce.bat
+   |-- _genonce.sh
+   |-- _refresh.bat
+   |-- _refresh.sh
+   |-- _updatePublisher.bat
+   |-- _updatePublisher.sh
+   |-- _updateCQFTooling.bat
+   |-- _updateCQFTooling.sh
+   |-- ig.ini
+   |-- bundles
+       |-- mat
+           |-- <bundle files>
+       |-- measure
+           |-- <bundles>
+   |-- input
+       |-- dqm-content-usqcore-2026.xml
+       |-- cql
+           |-- <library name>.cql
+       |-- pagecontent
+       |-- resources
+           |-- library
+               |-- <library name>.json
+           |-- measure
+               |-- <measure name>.json
+       |-- tests
+           |-- measure
+               |-- <measure name>
+                   |-- <test case patient id>
+                       |-- <test case resource files>
+                   |-- ...
+       |-- vocabulary
+           |-- valueset
+               |-- external
+```
+
+## Extracting MAT Packages
+
+CQF Tooling provides support for extracting a MAT exported package into the
+directories of this repository so that the measure is included in the published
+implementation guide. To do this, place the MAT export files (unzipped) in a
+directory in the `bundles\mat` directory, and then run the following tooling
+command:
+
+```
+[tooling-jar] -ExtractMatBundle bundles\mat\[bundle-directory]\[bundle-file]
+```
+
+For example:
+
+```
+input-cache\tooling-cli-3.9.1.jar -ExtractMATBundle bundles\mat\CLONE124_v6_03-Artifacts\measure-json-bundle.json
+```
+
+## Refresh IG Processing
+
+CQF Tooling provides a "refresh" operation that performs the following functions:
+
+* Translates and validates all CQL source files
+* Encodes CQL and ELM content in the corresponding FHIR Library resources
+* Refreshes generated content for each knowledge artifact (Library, Measure, PlanDefinition, ActivityDefinition) including parameters, dependencies, and effective data requirements
+
+Whenever changes are made to the CQL, Library, or Measure resources, run the `_refresh` command to refresh the implementation guide content with the new content, and then run `_genonce` to run the publication tooling on the implementation guide (the same process that the continuous integration build uses to publish the implementation guide when commits are made to this repository).
+
+
+## Measure Package Prep Process
+
+1. Download Measure Zip folder to `bundles\mat` directory.
+2. Unzip the folder, then unzip the MeasureExport and TestCaseExport folders within it.
+3. Run `_updateCQFTooling.sh` script to ensure CQF tooling jar is present.
+4. Update `_extractMATBundle.sh` so that `mat_bundle` points to the JSON file within the MeasureExport directory.
+5. Run `_extractMATBundle.sh` to load Measure Resources.
+6. Create a directory under `input\tests\measure` with the Measure ID.
+7. Copy all files from the TestCaseExport directory to this newly created directory.
+8. Update `_extractBundleResources.sh` so that `mat_bundle` points to this newly created directory.
+9. Run `_extractBundleResources.sh` to populate test case resources.
+10. Run `_refresh.sh` to refresh IG content.

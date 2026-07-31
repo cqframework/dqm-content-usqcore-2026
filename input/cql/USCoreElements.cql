@@ -11,8 +11,12 @@ library USCoreElements version '3.0.0-draft'
 TODO: Finish review and updates, based on version change log: https://hl7.org/fhir/us/core/changes-between-versions.html
 */
 
-using FHIR version '4.0.1'
+/*
+Note the use of 9.0.0-derived here, this is because the USCore ModelInfo that is
+published as part of the USCore 9.0.0 publication is a profile-informed (i.e. flattened) ModelInfo.
+*/
 using USCore version '9.0.0-derived'
+using FHIR version '4.0.1'
 
 include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1'
 include hl7.fhir.uv.cql.FHIRCommon version '2.0.0'

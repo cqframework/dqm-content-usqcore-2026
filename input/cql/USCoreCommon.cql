@@ -1,13 +1,19 @@
 /*
-@author: Bryn Rhodes
 @description: This library defines functions to expose extensions defined
 in USCore as fluent functions in CQL, as well as common terminology and functions
 used in writing CQL with FHIR and USCore profiles.
+@comment: This version is a draft of the updates needed to go from USCore 6.1.0 to 
+USCore 9.0.0. This version was started from the pre-publication draft of USCoreCommon 2.0.0.
+It adds extension access support for all the extensions introduced in v7, v8, and v9.
 */
-library USCoreCommon version '2.0.0-cibuild'
+library USCoreCommon version '3.0.0-draft'
 
+/*
+Note the use of 9.0.0-derived here, this is because the USCore ModelInfo that is
+published as part of the USCore 9.0.0 publication is a profile-informed (i.e. flattened) ModelInfo.
+*/
+using USCore version '9.0.0-derived'
 using FHIR version '4.0.1'
-using USCore version '6.1.0-derived'
 
 include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1'
 include hl7.fhir.uv.cql.FHIRCommon version '2.0.0'
@@ -151,6 +157,35 @@ define fluent function sexParameterForClinicalUse(patient FHIR.Patient, asOf Sys
     where asOf is null or SPCU.period is null or asOf during SPCU.period
     sort by start of period desc
 
+/*
+@description: Returns the [recorder](https://hl7.org/fhir/us/core/StructureDefinition-us-core-familymemberhistory-recorder.html) for the given FamilyMemberHistory
+*/
+define fluent function recorder(familyMemberHistory FamilyMemberHistory):
+  familyMemberHistory.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-familymemberhistory-recorder').value as FHIR.Reference
+
+/*
+@description: Returns the [interpreterNeeded](https://hl7.org/fhir/us/core/StructureDefinition-us-core-interpreter-needed.html) element for the given Encounter
+*/
+define fluent function interpreterNeeded(encounter Encounter):
+  encounter.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-interpreter-needed').value as FHIR.Coding
+
+/*
+@description: Returns the [interpreterNeeded](https://hl7.org/fhir/us/core/StructureDefinition-us-core-interpreter-needed.html) element for the given Patient
+*/
+define fluent function interpreterNeeded(patient Patient):
+  patient.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-interpreter-needed').value as FHIR.Coding
+
+/*
+@description: Returns the [interpreterNeeded](https://hl7.org/fhir/us/core/StructureDefinition-us-core-interpreter-needed.html) element for the given RelatedPerson
+*/
+define fluent function interpreterNeeded(relatedPerson RelatedPerson):
+  relatedPerson.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-interpreter-needed').value as FHIR.Coding
+
+/*
+@description: Returns the [interpreterNeeded](https://hl7.org/fhir/us/core/StructureDefinition-us-core-interpreter-needed.html) element for the given Practitioner
+*/
+define fluent function interpreterNeeded(practitioner Practitioner):
+  practitioner.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-interpreter-needed').value as FHIR.Coding
 
 /*
 @description: Returns the single systolic blood pressure component of the given blood pressure observation
@@ -249,3 +284,15 @@ define fluent function complete(diagnosticReports List<FHIR.DiagnosticReport>):
 */
 define fluent function transmissionMethod(medicationDispense FHIR.MedicationDispense):
   medicationDispense.ext('http://hl7.org/fhir/us/pdmp/StructureDefinition/pdmp-extension-rx-transmission-method').value as FHIR.Coding
+
+/*
+@description: Returns the [medicationAdherence](https://hl7.org/fhir/us/core/StructureDefinition-us-core-medication-adherence.html) element for the given MedicationRequest
+*/
+define fluent function medicationAdherence(medicationRequest FHIR.MedicationRequest):
+  (medicationRequest.ext('http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication-adherence')) E
+    return {
+      medicationAdherence: E.ext('medicationAdherence').value as FHIR.CodeableConcept,
+      dateAsserted: E.ext('dateAsserted').value as FHIR.dateTime,
+      informationSource: E.ext('informationSource').value as FHIR.CodeableConcept
+    }
+

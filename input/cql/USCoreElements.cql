@@ -1,11 +1,22 @@
-library USCoreElements version '2.0.0-cibuild'
+/*
+@description: This library defines shared elements for accessing data that conforms
+to the USCore implementation guide, providing re-usable common data elements that 
+implement the use cases described in the implementation guide.
+@comment: This version is a draft of the updates needed to go from USCore 6.1.0 to 
+USCore 9.0.0. This version was started from the pre-publication draft of USCoreElements 2.0.0.
+*/
+library USCoreElements version '3.0.0-draft'
+
+/*
+TODO: Finish review and updates, based on version change log: https://hl7.org/fhir/us/core/changes-between-versions.html
+*/
 
 using FHIR version '4.0.1'
-using USCore version '6.1.0-derived'
+using USCore version '9.0.0-derived'
 
 include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1'
 include hl7.fhir.uv.cql.FHIRCommon version '2.0.0'
-include USCoreCommon version '2.0.0-cibuild' called UC
+include USCoreCommon version '3.0.0-draft' called UC
 
 codesystem "LOINC": 'http://loinc.org'
 codesystem "Identifier Type": 'http://terminology.hl7.org/CodeSystem/v2-0203'
@@ -357,11 +368,11 @@ define "All Completed Immunizations":
 // Implantable Device
 
 /*
-@comment: [Implantable Device](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-implantable-device.html)
-@profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-implantable-device
+@comment: [Device](https://hl7.org/fhir/us/core/StructureDefinition-us-core-device.html)
+@profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-device
 */
-define "All Implantable Devices":
-  [USCore."ImplantableDeviceProfile"]
+define "All Devices":
+  [USCore."DeviceProfile"]
 
 // Laboratory Result
 
@@ -524,14 +535,14 @@ define "Most Recent Smoking Status":
 */
 define "All Vital Signs":
   (("All Vital Signs All Statuses").resulted()) O 
-    return O as "Vital Signs Profile"
+    return O as "VitalSignsProfile"
 
 /*
 @comment: [Vital Signs Panel](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-vital-signs.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-vital-signs
 */
 define "All Vital Signs All Statuses":
-  [USCore."Vital Signs Profile"]
+  [USCore."VitalSignsProfile"]
 
 // Respiratory Rate
 
@@ -541,14 +552,14 @@ define "All Vital Signs All Statuses":
 */
 define "All Respiratory Rate Measurements":
   (("All Respiratory Rate Measurements All Statuses").resulted()) O 
-    return O as "Respiratory Rate Profile"
+    return O as "RespiratoryRateProfile"
 
 /*
 @comment: [Respiratory Rate](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-respiratory-rate.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-respiratory-rate
 */
 define "All Respiratory Rate Measurements All Statuses":
-  [USCore."Respiratory Rate Profile"]
+  [USCore."RespiratoryRateProfile"]
 
 // Heart Rate
 
@@ -558,14 +569,14 @@ define "All Respiratory Rate Measurements All Statuses":
 */
 define "All Heart Rate Measurements":
   (("All Heart Rate Measurements All Statuses").resulted()) O 
-    return O as "Heart Rate Profile"
+    return O as "HeartRateProfile"
 
 /*
 @comment: [Heart Rate](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-heart-rate.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-heart-rate
 */
 define "All Heart Rate Measurements All Statuses":
-  [USCore."Heart Rate Profile"]
+  [USCore."HeartRateProfile"]
 
 // Body Temperature
 
@@ -575,14 +586,14 @@ define "All Heart Rate Measurements All Statuses":
 */
 define "All Body Temperature Measurements":
   (("All Body Temperature Measurements All Statuses").resulted()) O 
-    return O as "Body Temperature Profile"
+    return O as "BodyTemperatureProfile"
 
 /*
 @comment: [Body Temperature](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-body-temperature.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-body-temperature
 */
 define "All Body Temperature Measurements All Statuses":
-  [USCore."Body Temperature Profile"]
+  [USCore."BodyTemperatureProfile"]
 
 // Body Height
 
@@ -592,14 +603,14 @@ define "All Body Temperature Measurements All Statuses":
 */
 define "All Body Height Measurements":
    (("All Body Height Measurements All Statuses").resulted()) O
-     return O as "Body Height Profile"
+     return O as "BodyHeightProfile"
 
 /*
 @comment: [Body Height](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-body-height.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-body-height
 */
 define "All Body Height Measurements All Statuses":
-  [USCore."Body Height Profile"] 
+  [USCore."BodyHeightProfile"] 
 
 // Head Circumference
 
@@ -609,14 +620,14 @@ define "All Body Height Measurements All Statuses":
 */
 define "All Head Circumference Measurements":
   (("All Head Circumference Measurements All Statuses").resulted()) O 
-    return O as "Head Circumference Profile"
+    return O as "HeadCircumferenceProfile"
 
 /*
 @comment: [Head Circumference](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-head-circumference.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-head-circumference
 */
 define "All Head Circumference Measurements All Statuses":
-  [USCore."Head Circumference Profile"]
+  [USCore."HeadCircumferenceProfile"]
 
 // Body Weight
 
@@ -626,14 +637,14 @@ define "All Head Circumference Measurements All Statuses":
 */
 define "All Body Weight Measurements":
   (("All Body Weight Measurements All Statuses").resulted()) O 
-    return O as "Body Weight Profile"
+    return O as "BodyWeightProfile"
 
 /*
 @comment: [Body Weight](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-body-weight.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-body-weight
 */
 define "All Body Weight Measurements All Statuses":
-  [USCore."Body Weight Profile"]
+  [USCore."BodyWeightProfile"]
 
 // Body Mass Index
 
@@ -643,14 +654,14 @@ define "All Body Weight Measurements All Statuses":
 */
 define "All Body Mass Index Measurements":
   (("All Body Mass Index Measurements All Statuses").resulted()) O 
-    return O as "BMI Profile"
+    return O as "BMIProfile"
 
 /*
 @comment: [Body Mass Index](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-bmi.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi
 */
 define "All Body Mass Index Measurements All Statuses":
-  [USCore."BMI Profile"]
+  [USCore."BMIProfile"]
 
 // Blood Pressure
 
@@ -660,14 +671,14 @@ define "All Body Mass Index Measurements All Statuses":
 */
 define "All Blood Pressure Measurements":
   (("All Blood Pressure Measurements All Statuses").resulted()) O 
-    return O as "Blood Pressure Profile"
+    return O as "BloodPressureProfile"
 
 /*
 @comment: [Blood Pressure](https://hl7.org/fhir/us/core/STU6.1/StructureDefinition-us-core-blood-pressure.html)
 @profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-blood-pressure
 */
 define "All Blood Pressure Measurements All Statuses":
-  [USCore."Blood Pressure Profile"]
+  [USCore."BloodPressureProfile"]
 
 // Systolic Blood Pressure
 define "Systolic Blood Pressure":

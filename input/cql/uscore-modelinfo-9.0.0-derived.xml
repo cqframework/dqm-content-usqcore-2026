@@ -2905,7 +2905,6 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="USCore.Observation.Component"/>
         </element>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USCore" name="QuestionnaireResponseProfile" identifier="http://hl7.org/fhir/us/core/StructureDefinition/us-core-questionnaireresponse" label="QuestionnaireResponse Profile" target="QuestionnaireResponse" retrievable="true"/>
     <typeInfo xsi:type="ClassInfo" namespace="USCore" name="RaceExtension" identifier="http://hl7.org/fhir/us/core/StructureDefinition/us-core-race" label="Race Extension" retrievable="false" baseType="FHIR.Extension">
         <element name="url" elementType="FHIR.uri"/>
     </typeInfo>

@@ -1,11 +1,18 @@
-library USQualityCoreCommonTests version '0.5.0'
+/*
+@description: Tests for functions and patterns used in USQualityCore implementation guide
+@comment: This version is a draft of the updates needed to go from USQualityCore 0.5.0 to 1.0.0-ballot
+This version was started from the 0.5.0 published USQualityCoreCommonTests
+*/
+library USQualityCoreCommonTests version '3.0.0-draft'
 
-using USQualityCore version '0.5.0'
-using USCore version '6.1.0-derived'
+using USQualityCore version '1.0.0-ballot'
+using USCore version '9.0.0-derived'
 using FHIR version '4.0.1'
 
-include FHIRHelpers version '4.0.1'
-include USQualityCoreCommon
+include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1'
+include hl7.fhir.uv.cql.FHIRCommon version '2.0.0'
+
+include USQualityCoreCommon version '3.0.0-draft'
 
 codesystem "Marital Status Codes": 'http://terminology.hl7.org/CodeSystem/v3-MaritalStatus'
 codesystem "CDC Race and Ethnicity Codes": 'urn:oid:2.16.840.1.113883.6.238'
@@ -52,8 +59,9 @@ define TestConditionEncounterDiagnosis: ["ConditionEncounterDiagnosis"]
 define TestConditionProblemsHealthConcerns: ["ConditionProblemsHealthConcerns"]
 define TestCoverage: ["Coverage"]
 define TestDevice: ["Device"]
-define TestDeviceNotRequested: ["DeviceNotRequested"]
+define TestDeviceProhibited: ["DeviceProhibited"]
 define TestDeviceRequest: ["DeviceRequest"]
+define TestDeviceRequested: ["DeviceRequested"]
 define TestDeviceUseStatement: ["DeviceUseStatement"]
 define TestDiagnosticReportLab: ["DiagnosticReportLab"]
 define TestDiagnosticReportNote: ["DiagnosticReportNote"]
@@ -64,22 +72,24 @@ define TestGoal: ["Goal"]
 define TestImagingStudy: ["ImagingStudy"]
 define TestImmunization: ["Immunization"]
 define TestImmunizationEvaluation: ["ImmunizationEvaluation"]
+define TestImmunizationDone: ["ImmunizationDone"]
 define TestImmunizationNotDone: ["ImmunizationNotDone"]
 define TestImmunizationRecommendation: ["ImmunizationRecommendation"]
-define TestLaboratoryResultObservation: ["LaboratoryResultObservation"]
 define TestLocation: ["Location"]
 define TestMedication: ["Medication"]
 define TestMedicationAdministration: ["MedicationAdministration"]
+define TestMedicationAdministrationDone: ["MedicationAdministrationDone"]
 define TestMedicationAdministrationNotDone: ["MedicationAdministrationNotDone"]
 define TestMedicationDispense: ["MedicationDispense"]
 define TestMedicationDispenseDeclined: ["MedicationDispenseDeclined"]
-define TestMedicationNotRequested: ["MedicationNotRequested"]
+define TestMedicationDispenseDone: ["MedicationDispenseDone"]
+define TestMedicationProhibited: ["MedicationProhibited"]
 define TestMedicationRequest: ["MedicationRequest"]
+define TestMedicationRequested: ["MedicationRequested"]
 define TestMedicationStatement: ["MedicationStatement"]
 define TestObservation: ["SimpleObservation"]
-define TestObservationCancelled: ["ObservationCancelled"]
-define TestObservationClinicalTestResult: ["ObservationClinicalResult"]
-define TestObservationImagingResult: ["NonPatientObservation"]
+define TestObservationLab: ["ObservationLab"]
+define TestObservationClinicalResult: ["ObservationClinicalResult"]
 define TestObservationSurvey: ["ObservationScreeningAssessment"]
 define TestOrganization: ["Organization"]
 define TestPatient: ["Patient"]
@@ -97,21 +107,13 @@ define TestPractitionerRole: ["PractitionerRole"]
 define TestProcedure: ["Procedure"]
 define TestProcedureNotDone: ["ProcedureNotDone"]
 define TestRelatedPerson: ["RelatedPerson"]
-define TestServiceNotRequested: ["ServiceNotRequested"]
+define TestServiceProhibited: ["ServiceProhibited"]
 define TestServiceRequest: ["ServiceRequest"]
+define TestServiceRequested: ["ServiceRequested"]
 define TestSpecimen: ["Specimen"]
 define TestSubstance: ["Substance"]
 define TestTask: ["Task"]
 define TestTaskRejected: ["TaskRejected"]
-define TestUSCoreImplantableDevice: [USCore.ImplantableDeviceProfile]
-define TestUSCoreSmokingStatus: [USCore.SmokingStatusProfile]
-define TestUSCorePulseOximetry: [USCore.PulseOximetryProfile]
-define TestUSCorePediatricBMIForAge: [USCore.PediatricBMIforAgeObservationProfile]
-define TestUSCorePediatricWeightForHeight: [USCore.PediatricWeightForHeightObservationProfile]
-define TestUSCorePediatricHeadOccipitalFrontalCircumferencePercentileProfile: [USCore.PediatricHeadOccipitalFrontalCircumferencePercentileProfile]
-//define TestUSCoreObservationSDOHAssessment: [USCore.ObservationSDOHAssessment]
-//define TestUSCoreObservationSocialHistoryProfile: [USCore.ObservationSocialHistoryProfile]
-define TestUSCoreObservationSexualOrientationProfile: [USCore.ObservationSexualOrientationProfile]
 
 // Validate Encounter.diagnosis cardinality
 define TestEncounterDiagnosisCardinality:
@@ -158,39 +160,39 @@ define TestGeneralCommunicationNotDoneExplicit:
     where C.topic() in CommunicationCodes
       or C.topic() ~ CommunicationCodes
 
-// DeviceNotRequested
-define TestSpecificDeviceNotRequested:
-  ["DeviceNotRequested": DeviceCode]
+// DeviceProhibited
+define TestSpecificDeviceProhibited:
+  ["DeviceProhibited": DeviceCode]
 
 // TODO: Support this use case
-//define TestSpecificDeviceNotRequestedActual:
-//    ["DeviceNotRequested": code ~ DeviceCode]
-//      union ["DeviceNotRequested": code ~contains DeviceCode]
+//define TestSpecificDeviceProhibitedActual:
+//    ["DeviceProhibited": code ~ DeviceCode]
+//      union ["DeviceProhibited": code ~contains DeviceCode]
 
-define TestSpecificDeviceNotRequestedExplicit:
-  [DeviceNotRequested] D
+define TestSpecificDeviceProhibitedExplicit:
+  [DeviceProhibited] D
     where D.code() ~ DeviceCode
       or DeviceCode in D.code()
 
-define TestGeneralDeviceNotRequested:
-  ["DeviceNotRequested": DeviceCodes]
+define TestGeneralDeviceProhibited:
+  ["DeviceProhibited": DeviceCodes]
 
 // NOTE: This warning should not be happening, logged a translator issue to investigate: https://github.com/cqframework/clinical_quality_language/issues/1714
-define TestGeneralDeviceNotRequestedActual:
-  ["DeviceNotRequested": code in DeviceCodes]
-    union ["DeviceNotRequested": code ~ DeviceCodes]
+define TestGeneralDeviceProhibitedActual:
+  ["DeviceProhibited": code in DeviceCodes]
+    union ["DeviceProhibited": code ~ DeviceCodes]
 
-define TestGeneralDeviceNotRequestedExplicit:
-  ["DeviceNotRequested"] D
+define TestGeneralDeviceProhibitedExplicit:
+  ["DeviceProhibited"] D
     where D.code() in DeviceCodes
       or D.code() ~ DeviceCodes
 
-define TestGeneralDeviceNotRequestedCodeExplicit:
-  ["DeviceNotRequested"] D
+define TestGeneralDeviceProhibitedCodeExplicit:
+  ["DeviceProhibited"] D
     where D.code() in DeviceCodes
 
-define TestGeneralDeviceNotRequestedValueSetExplicit:
-  ["DeviceNotRequested"] D
+define TestGeneralDeviceProhibitedValueSetExplicit:
+  ["DeviceProhibited"] D
     where D.code() ~ DeviceCodes
 
 // ImmunizationNotDone
@@ -274,59 +276,32 @@ define TestGeneralMedicationDispenseDeclinedExplicit:
     where I.medication() in MedicationCodes
       or I.medication() ~ MedicationCodes
 
-// MedicationNotRequested
-define TestSpecificMedicationNotRequested:
-  ["MedicationNotRequested": MedicationCode]
+// MedicationProhibited
+define TestSpecificMedicationProhibited:
+  ["MedicationProhibited": MedicationCode]
 
 // TODO: Support this use case
-//define TestSpecificMedicationNotRequestedActual:
-//    ["MedicationNotRequested": medication ~ MedicationCode]
-//      union ["MedicationNotRequested": medication ~contains MedicationCode]
+//define TestSpecificMedicationProhibitedActual:
+//    ["MedicationProhibited": medication ~ MedicationCode]
+//      union ["MedicationProhibited": medication ~contains MedicationCode]
 
-define TestSpecificMedicationNotRequestedExplicit:
-  ["MedicationNotRequested"] I
+define TestSpecificMedicationProhibitedExplicit:
+  ["MedicationProhibited"] I
     where I.medication() ~ MedicationCode
       or MedicationCode in I.medication()
 
-define TestGeneralMedicationNotRequested:
-  ["MedicationNotRequested": MedicationCodes]
+define TestGeneralMedicationProhibited:
+  ["MedicationProhibited": MedicationCodes]
 
 // NOTE: This warning should not be happening, logged a translator issue to investigate: https://github.com/cqframework/clinical_quality_language/issues/1714
-define TestGeneralMedicationNotRequestedActual:
-  ["MedicationNotRequested": medication in MedicationCodes]
-    union ["MedicationNotRequested": medication ~ MedicationCodes]
+define TestGeneralMedicationProhibitedActual:
+  ["MedicationProhibited": medication in MedicationCodes]
+    union ["MedicationProhibited": medication ~ MedicationCodes]
 
-define TestGeneralMedicationNotRequestedExplicit:
-  ["MedicationNotRequested"] I
+define TestGeneralMedicationProhibitedExplicit:
+  ["MedicationProhibited"] I
     where I.medication() in MedicationCodes
       or I.medication() ~ MedicationCodes
-
-// ObservationCancelled
-define TestSpecificObservationCancelled:
-  ["ObservationCancelled": ObservationCode]
-
-// TODO: Support this use case
-//define TestSpecificObservationCancelledActual:
-//    ["ObservationCancelled": code ~ ObservationCode]
-//      union ["ObservationCancelled": code contains ObservationCode]
-
-define TestSpecificObservationCancelledExplicit:
-  ["ObservationCancelled"] I
-    where I.code() ~ ObservationCode
-      or ObservationCode in I.code()
-
-define TestGeneralObservationCancelled:
-  ["ObservationCancelled": ObservationCodes]
-
-// NOTE: This warning should not be happening, logged a translator issue to investigate: https://github.com/cqframework/clinical_quality_language/issues/1714
-define TestGeneralObservationCancelledActual:
-  ["ObservationCancelled": code in ObservationCodes]
-    union ["ObservationCancelled": code ~ ObservationCodes]
-
-define TestGeneralObservationCancelledExplicit:
-  ["ObservationCancelled"] I
-    where I.code() in ObservationCodes
-      or I.code() ~ ObservationCodes
 
 // ProcedureNotDone
 define TestSpecificProcedureNotDone:
@@ -355,30 +330,30 @@ define TestGeneralProcedureNotDoneExplicit:
     where I.code() in ProcedureCodes
       or I.code() ~ ProcedureCodes
 
-// ServiceNotRequested
-define TestSpecificServiceNotRequested:
-  ["ServiceNotRequested": ProcedureCode]
+// ServiceProhibited
+define TestSpecificServiceProhibited:
+  ["ServiceProhibited": ProcedureCode]
 
 // TODO: Support this use case
-//define TestSpecificServiceNotRequestedActual:
-//    ["ServiceNotRequested": code ~ ProcedureCode]
-//      union ["ServiceNotRequested": code ~contains ProcedureCode]
+//define TestSpecificServiceProhibitedActual:
+//    ["ServiceProhibited": code ~ ProcedureCode]
+//      union ["ServiceProhibited": code ~contains ProcedureCode]
 
-define TestSpecificServiceNotRequestedExplicit:
-  ["ServiceNotRequested"] I
+define TestSpecificServiceProhibitedExplicit:
+  ["ServiceProhibited"] I
     where I.code() ~ ProcedureCode
       or ProcedureCode in I.code()
 
-define TestGeneralServiceNotRequested:
-  ["ServiceNotRequested": ProcedureCodes]
+define TestGeneralServiceProhibited:
+  ["ServiceProhibited": ProcedureCodes]
 
 // NOTE: This warning should not be happening, logged a translator issue to investigate: https://github.com/cqframework/clinical_quality_language/issues/1714
-define TestGeneralServiceNotRequestedActual:
-  ["ServiceNotRequested": code in ProcedureCodes]
-    union ["ServiceNotRequested": code ~ ProcedureCodes]
+define TestGeneralServiceProhibitedActual:
+  ["ServiceProhibited": code in ProcedureCodes]
+    union ["ServiceProhibited": code ~ ProcedureCodes]
 
-define TestGeneralServiceNotRequestedExplicit:
-  ["ServiceNotRequested"] I
+define TestGeneralServiceProhibitedExplicit:
+  ["ServiceProhibited"] I
     where I.code() in ProcedureCodes
       or I.code() ~ ProcedureCodes
 
@@ -391,7 +366,7 @@ define TestSpecificTaskRejected:
 //    ["TaskRejected": code ~ TaskCode]
 //      union ["TaskRejected": code contains TaskCode]
 
-define TestSpecificTaskNotDoneExplicit:
+define TestSpecificTaskRejectedExplicit:
   ["TaskRejected"] I
     where I.code() ~ TaskCode
       or TaskCode in I.code()

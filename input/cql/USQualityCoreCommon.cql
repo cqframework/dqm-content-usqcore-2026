@@ -1,14 +1,12 @@
 /*
 @description: Common terminologies and functions used in USQualityCore-based CQL artifacts
-@comment: The modelinfo included with the published IG is using [derived modelinfo](https://hl7.org/fhir/uv/cql/using-modelinfo.html#derived-modelinfo)
-to enable reuse of data elements and libraries defined in the [US Core](https://hl7.org/fhir/us/core)
-and [US CQL](https://hl7.org/fhir/us/cql) Common IGs. This library is derived from the QICoreCommon shared library used in FHIR-based
-quality measure specifications. However, most of the functionality that was defined in QICoreCommon is now either in [FHIRCommon](https://hl7.org/fhir/uv/cql/Library-FHIRCommon.html)
-or [USCoreCommon](https://hl7.org/fhir/us/cql/Library-USCoreCommon.html).
+@comment: This version is a draft of the updates needed to go from USQualityCore 0.5.0 to 1.0.0-ballot
+This version was started from the 0.5.0 published USQualityCoreCommon.
+It adds extension access support for all the extensions introduced in v1.0.0
 */
-library USQualityCoreCommon version '0.5.0'
+library USQualityCoreCommon version '3.0.0-draft'
 
-using USQualityCore version '0.5.0'
+using USQualityCore version '1.0.0-ballot'
 
 include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1'
 include hl7.fhir.uv.cql.FHIRCommon version '2.0.0'
@@ -50,151 +48,114 @@ define fluent function toValueSet(canonical FHIR.canonical):
   }
 
 /*
-@description: Converts the activity extent pattern used to represent negated activities to either a codeableConcept or a value set
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Converts the activity extent pattern used to represent possible activities to either a codeableConcept or a value set
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
 define fluent function toActivityExtent(codeableConcept FHIR.CodeableConcept):
-  (codeableConcept.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-notDoneValueSet').value) X
+  (codeableConcept.ext('http://hl7.org/fhir/StructureDefinition/codeOptions').value) X
     return
       if X is not null
         then X.toValueSet()
         else codeableConcept
 
 /*
-@description: Returns the value of the recorded extension for a Communication Not Done
+@description: Returns the value of the recorded extension for a CommunicationNotDone
 */
 define fluent function recorded(communicationNotDone CommunicationNotDone):
-  communicationNotDone.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-recorded').value as FHIR.dateTime
+  communicationNotDone.ext('http://hl7.org/fhir/StructureDefinition/event-recorded').value as FHIR.dateTime
 
 /*
-@description: Returns the negated activity extent for a Communication Not Done
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Returns the activity extent for a Communication
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function topic(communicationNotDone CommunicationNotDone):
-  communicationNotDone.topic.toActivityExtent()
+define fluent function topic(communication Communication):
+  communication.topic.toActivityExtent()
 
 /*
-@description: Returns the value of the doNotPerformReason extension for a Device Not Requested
+@description: Returns the value of the doNotPerform extension for a Device Prohibited
 */
-define fluent function doNotPerformReason(deviceNotRequested DeviceNotRequested):
-  deviceNotRequested.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-doNotPerformReason').value as FHIR.CodeableConcept
+define fluent function doNotPerform(deviceProhibited DeviceProhibited):
+  deviceProhibited.ext('http://hl7.org/fhir/5.0/StructureDefinition/extension-DeviceRequest.doNotPerform').value as FHIR.boolean
 
 /*
-@description: Returns the value of the doNotPerform extension for a Device Not Requested
+@description: Returns the activity extent for a DeviceRequest
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function doNotPerform(deviceNotRequested DeviceNotRequested):
-  deviceNotRequested.ext('http://hl7.org/fhir/5.0/StructureDefinition/extension-DeviceRequest.doNotPerform').value as FHIR.boolean
-
-/*
-@description: Returns the negated activity extent for a Device Not Requested
-@seealso: [Negation In US Quality Core](negation.html)
-*/
-define fluent function code(deviceNotRequested DeviceNotRequested):
-  deviceNotRequested.code.toActivityExtent()
+define fluent function code(deviceRequest DeviceRequest):
+  deviceRequest.code.toActivityExtent()
 
 /*
 @description: Returns the value of the abatement extension for a FamilyMemberHistory
 */
-define fluent function abatement(familyMemberHistory FamilyMemberHistory):
+define fluent function abatement(familyMemberHistory FHIR.FamilyMemberHistory):
   familyMemberHistory.ext('hl7.org/fhir/StructureDefinition/familymemberhistory-abatement').value as Choice<FHIR.date, FHIR.Age, FHIR.boolean>
 
 /*
 @description: Returns the value of the severity extension for a FamilyMemberHistory
 */
-define fluent function severity(familyMemberHistory FamilyMemberHistory):
+define fluent function severity(familyMemberHistory FHIR.FamilyMemberHistory):
   familyMemberHistory.ext('hl7.org/fhir/StructureDefinition/familymemberhistory-severity').value as FHIR.CodeableConcept
 
 /*
-@description: Returns the negated activity extent for an Immunization Not Done
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Returns the activity extent for an Immunization
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function vaccineCode(immunizationNotDone ImmunizationNotDone):
-  immunizationNotDone.vaccineCode.toActivityExtent()
+define fluent function vaccineCode(immunization Immunization):
+  immunization.vaccineCode.toActivityExtent()
 
 /*
-@description: Returns the value of the recorded extension for a Medication Administration Not Done
+@description: Returns the activity extent for a MedicationAdministration
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function recorded(medicationAdministrationNotDone MedicationAdministrationNotDone):
-  medicationAdministrationNotDone.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-recorded').value as FHIR.dateTime
-
-/*
-@description: Returns the negated activity extent for a Medication Administration Not Done
-@seealso: [Negation In US Quality Core](negation.html)
-*/
-define fluent function medication(medicationAdministrationNotDone MedicationAdministrationNotDone):
-  medicationAdministrationNotDone.medication.toActivityExtent()
+define fluent function medication(medicationAdministration MedicationAdministration):
+  medicationAdministration.medication.toActivityExtent()
 
 /*
 @description: Returns the value of the recorded extension for a Medication Dispense Declined
 */
 define fluent function recorded(medicationDispenseDeclined MedicationDispenseDeclined):
-  medicationDispenseDeclined.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-recorded').value as FHIR.dateTime
+  medicationDispenseDeclined.ext('http://hl7.org/fhir/5.0/StructureDefinition/extension-MedicationDispense.recorded').value as FHIR.dateTime
 
 /*
-@description: Returns the negated activity extent for a Medication Dispense Declined
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Returns the activity extent for a MedicationDispense
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function medication(medicationDispenseDeclined MedicationDispenseDeclined):
-  (medicationDispenseDeclined.medication as FHIR.CodeableConcept).toActivityExtent()
+define fluent function medication(medicationDispense MedicationDispense):
+  (medicationDispense.medication as FHIR.CodeableConcept).toActivityExtent()
 
 /*
-@description: Returns the negated activity extent for a Medication Not Requested
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Returns the activity extent for a MedicationRequest
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function medication(medicationNotRequested MedicationNotRequested):
-  medicationNotRequested.medication.toActivityExtent()
-
-/*
-@description: Returns the notDoneReason for an ObservationCancelled
-*/
-define fluent function notDoneReason(observationCancelled ObservationCancelled):
-  observationCancelled.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-notDoneReason').value as FHIR.CodeableConcept
-
-/*
-@description: Returns the negated activity extent for an ObservationCancelled
-@seealso: [Negation In US Quality Core](negation.html)
-*/
-define fluent function code(observationCancelled ObservationCancelled):
-  observationCancelled.code.toActivityExtent()
+define fluent function medication(medicationRequest MedicationRequest):
+  medicationRequest.medication.toActivityExtent()
 
 /*
 @description: Returns the value of the recorded extension for a Procedure
 */
 define fluent function recorded(procedure Procedure):
-  procedure.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-recorded').value as FHIR.dateTime
+  procedure.ext('http://hl7.org/fhir/5.0/StructureDefinition/extension-Procedure.recorded').value as FHIR.dateTime
 
 /*
-@description: Returns the value of the recorded extension for a Medication Administration Not Done
+@description: Returns the activity extent for a Procedure
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function recorded(procedureNotDone ProcedureNotDone):
-  procedureNotDone.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-recorded').value as FHIR.dateTime
+define fluent function code(procedure Procedure):
+  procedure.code.toActivityExtent()
 
 /*
-@description: Returns the negated activity extent for a Procedure Not Done
-@seealso: [Negation In US Quality Core](negation.html)
+@description: Returns the activity extent for a Service Request
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function code(procedureNotDone ProcedureNotDone):
-  procedureNotDone.code.toActivityExtent()
+define fluent function code(serviceRequest ServiceRequest):
+  serviceRequest.code.toActivityExtent()
 
 /*
-@description: Returns the value of the recorded extension for a Medication Administration Not Done
+@description: Returns the activity extent for a Task
+@seealso: [Negation In US Quality Core](http://hl7.org/fhir/us/quality-core/negation.html)
 */
-define fluent function reasonRefused(serviceNotRequested ServiceNotRequested):
-  serviceNotRequested.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-doNotPerformReason').value as FHIR.CodeableConcept
-
-/*
-@description: Returns the negated activity extent for a Service Not Requested
-@seealso: [Negation In US Quality Core](negation.html)
-*/
-define fluent function code(serviceNotRequested ServiceNotRequested):
-  serviceNotRequested.code.toActivityExtent()
-
-/*
-@description: Returns the negated activity extent for a Task Rejected
-@seealso: [Negation In US Quality Core](negation.html)
-*/
-define fluent function code(taskRejected TaskRejected):
-  taskRejected.code.toActivityExtent()
+define fluent function code(task FHIR.Task):
+  task.code.toActivityExtent()
 
 /*
 @description: Creates a list of integers from 1 to how many days are in the interval. Note, this wont create an index for
@@ -222,4 +183,4 @@ define fluent function daysInPeriod(Period Interval<DateTime>):
 @description: Returns the value of the presentOnAdmission extension
 */
 define fluent function presentOnAdmission(diagnosis USQualityCore."Encounter.Diagnosis"):
-  diagnosis.ext('http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-encounter-diagnosisPresentOnAdmission').value as FHIR.CodeableConcept
+  diagnosis.ext('http://hl7.org/fhir/us/quality-core/StructureDefinition/us-quality-core-diagnosis-present-on-admission').value as FHIR.CodeableConcept

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <modelInfo name="USQualityCore" version="1.0.0-ballot" url="http://hl7.org/fhir/us/quality-core" targetUrl="http://hl7.org/fhir" targetQualifier="usqualitycore" xmlns="urn:hl7-org:elm-modelinfo:r1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredModelInfo name="System" version="1.0.0"/>
+    <requiredModelInfo name="FHIR" version="4.0.1"/>
+    <requiredModelInfo name="USCore" version="9.0.0-derived"/>
     <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="AdverseEvent" identifier="http://hl7.org/fhir/us/quality-core/StructureDefinition/us-quality-core-adverseevent" label="US Quality Core AdverseEvent" retrievable="true" baseType="FHIR.AdverseEvent">
         <element name="identifier" elementType="FHIR.Identifier"/>
         <element name="actuality" elementType="FHIR.AdverseEventActuality"/>
@@ -123,8 +125,8 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
-        <element name="intent" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.CarePlanStatus"/>
+        <element name="intent" elementType="FHIR.CarePlanIntent"/>
         <element name="category" elementType="FHIR.CodeableConcept"/>
         <element name="title" elementType="FHIR.string"/>
         <element name="description" elementType="FHIR.string"/>
@@ -219,7 +221,7 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.CareTeamStatus"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -318,7 +320,7 @@
         <contextRelationship context="RelatedPerson" relatedKeyElement="sender"/>
         <contextRelationship context="RelatedPerson" relatedKeyElement="recipient"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Communication.Payload" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Communication.Payload" retrievable="false" baseType="FHIR.Communication.Payload">
         <element name="content">
             <elementTypeSpecifier xsi:type="ChoiceTypeSpecifier">
                 <choice xsi:type="NamedTypeSpecifier" namespace="FHIR" name="string"/>
@@ -346,7 +348,7 @@
         <element name="inResponseTo">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.CommunicationStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
@@ -579,8 +581,8 @@
         <element name="group" elementType="USQualityCore.Coverage.Class.group"/>
         <element name="plan" elementType="USQualityCore.Coverage.Class.plan"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Coverage.Class.group" retrievable="false" baseType="USQualityCore.Coverage.Class"/>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Coverage.Class.plan" retrievable="false" baseType="USQualityCore.Coverage.Class"/>
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Coverage.Class.group" retrievable="false" baseType="USCore.Coverage.Class.group"/>
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Coverage.Class.plan" retrievable="false" baseType="USCore.Coverage.Class.plan"/>
     <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Coverage.CostToBeneficiary" retrievable="false" baseType="USCore.Coverage.CostToBeneficiary">
         <element name="type" elementType="FHIR.CodeableConcept"/>
         <element name="value">
@@ -724,7 +726,7 @@
         <contextRelationship context="Patient" relatedKeyElement="performer"/>
         <contextRelationship context="Encounter" relatedKeyElement="encounter"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="DeviceRequest.Parameter" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="DeviceRequest.Parameter" retrievable="false" baseType="FHIR.DeviceRequest.Parameter">
         <element name="code" elementType="FHIR.CodeableConcept"/>
         <element name="value">
             <elementTypeSpecifier xsi:type="ChoiceTypeSpecifier">
@@ -808,7 +810,7 @@
         <element name="basedOn">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.DiagnosticReportStatus"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -855,7 +857,7 @@
         <element name="basedOn">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.DiagnosticReportStatus"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -997,7 +999,7 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="lifecycleStatus" elementType="FHIR.code"/>
+        <element name="lifecycleStatus" elementType="FHIR.GoalLifecycleStatus"/>
         <element name="achievementStatus" elementType="FHIR.CodeableConcept"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
@@ -1130,7 +1132,7 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ImmunizationStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="vaccineCode" elementType="FHIR.CodeableConcept"/>
         <element name="patient" elementType="FHIR.Reference"/>
@@ -1183,17 +1185,17 @@
         <contextRelationship context="Practitioner" relatedKeyElement="actor"/>
         <contextRelationship context="Patient" relatedKeyElement="patient"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Education" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Education" retrievable="false" baseType="USCore.Immunization.Education">
         <element name="documentType" elementType="FHIR.string"/>
         <element name="reference" elementType="FHIR.uri"/>
         <element name="publicationDate" elementType="FHIR.dateTime"/>
         <element name="presentationDate" elementType="FHIR.dateTime"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Performer" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Performer" retrievable="false" baseType="USCore.Immunization.Performer">
         <element name="function" elementType="FHIR.CodeableConcept"/>
         <element name="actor" elementType="FHIR.Reference"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.ProtocolApplied" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.ProtocolApplied" retrievable="false" baseType="USCore.Immunization.ProtocolApplied">
         <element name="series" elementType="FHIR.string"/>
         <element name="authority" elementType="FHIR.Reference"/>
         <element name="targetDisease">
@@ -1212,7 +1214,7 @@
             </elementTypeSpecifier>
         </element>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Reaction" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Immunization.Reaction" retrievable="false" baseType="USCore.Immunization.Reaction">
         <element name="date" elementType="FHIR.dateTime"/>
         <element name="detail" elementType="FHIR.Reference"/>
         <element name="reported" elementType="FHIR.boolean"/>
@@ -1221,7 +1223,7 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ImmunizationStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="vaccineCode" elementType="FHIR.CodeableConcept"/>
         <element name="patient" elementType="FHIR.Reference"/>
@@ -1276,7 +1278,7 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ImmunizationStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="vaccineCode" elementType="FHIR.CodeableConcept"/>
         <element name="patient" elementType="FHIR.Reference"/>
@@ -1458,7 +1460,7 @@
         <contextRelationship context="Encounter" relatedKeyElement="context"/>
         <contextRelationship context="RelatedPerson" relatedKeyElement="actor"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationAdministration.Dosage" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationAdministration.Dosage" retrievable="false" baseType="FHIR.MedicationAdministration.Dosage">
         <element name="text" elementType="FHIR.string"/>
         <element name="site" elementType="FHIR.CodeableConcept"/>
         <element name="route" elementType="FHIR.CodeableConcept"/>
@@ -1471,7 +1473,7 @@
             </elementTypeSpecifier>
         </element>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationAdministration.Performer" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationAdministration.Performer" retrievable="false" baseType="FHIR.MedicationAdministration.Performer">
         <element name="function" elementType="FHIR.CodeableConcept"/>
         <element name="actor" elementType="FHIR.Reference"/>
     </typeInfo>
@@ -1485,7 +1487,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.MedicationAdministrationStatus"/>
         <element name="statusReason">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -1640,11 +1642,11 @@
         <contextRelationship context="Patient" relatedKeyElement="patient"/>
         <contextRelationship context="Patient" relatedKeyElement="receiver"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationDispense.Performer" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationDispense.Performer" retrievable="false" baseType="USCore.MedicationDispense.Performer">
         <element name="function" elementType="FHIR.CodeableConcept"/>
         <element name="actor" elementType="FHIR.Reference"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationDispense.Substitution" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationDispense.Substitution" retrievable="false" baseType="USCore.MedicationDispense.Substitution">
         <element name="wasSubstituted" elementType="FHIR.boolean"/>
         <element name="type" elementType="FHIR.CodeableConcept"/>
         <element name="reason">
@@ -1712,7 +1714,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.MedicationDispenseStatus"/>
         <element name="statusReason">
             <elementTypeSpecifier xsi:type="ChoiceTypeSpecifier">
                 <choice xsi:type="NamedTypeSpecifier" namespace="FHIR" name="CodeableConcept"/>
@@ -1765,9 +1767,9 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.MedicationRequestStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
-        <element name="intent" elementType="FHIR.code"/>
+        <element name="intent" elementType="FHIR.MedicationRequestIntent"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -1833,9 +1835,9 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.MedicationRequestStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
-        <element name="intent" elementType="FHIR.code"/>
+        <element name="intent" elementType="FHIR.MedicationRequestIntent"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -1902,7 +1904,7 @@
         <contextRelationship context="Patient" relatedKeyElement="subject"/>
         <contextRelationship context="Encounter" relatedKeyElement="encounter"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.DispenseRequest" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.DispenseRequest" retrievable="false" baseType="USCore.MedicationRequest.DispenseRequest">
         <element name="dispenseInterval" elementType="FHIR.Duration"/>
         <element name="validityPeriod" elementType="FHIR.Period"/>
         <element name="numberOfRepeatsAllowed" elementType="FHIR.unsignedInt"/>
@@ -1910,11 +1912,11 @@
         <element name="expectedSupplyDuration" elementType="FHIR.Duration"/>
         <element name="performer" elementType="FHIR.Reference"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.DispenseRequest.InitialFill" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.DispenseRequest.InitialFill" retrievable="false" baseType="USCore.MedicationRequest.DispenseRequest.InitialFill">
         <element name="quantity" elementType="FHIR.SimpleQuantity"/>
         <element name="duration" elementType="FHIR.Duration"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.Substitution" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="MedicationRequest.Substitution" retrievable="false" baseType="USCore.MedicationRequest.Substitution">
         <element name="allowed">
             <elementTypeSpecifier xsi:type="ChoiceTypeSpecifier">
                 <choice xsi:type="NamedTypeSpecifier" namespace="FHIR" name="boolean"/>
@@ -1927,9 +1929,9 @@
         <element name="identifier">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Identifier"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.MedicationRequestStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
-        <element name="intent" elementType="FHIR.code"/>
+        <element name="intent" elementType="FHIR.MedicationRequestIntent"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
@@ -2111,7 +2113,7 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
         <element name="referenceRange">
-            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="http://hl7.org/fhir/StructureDefinition/Observation#Observation.referenceRange"/>
+            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="USQualityCore.Observation.ReferenceRange"/>
         </element>
     </typeInfo>
     <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Observation.ReferenceRange" retrievable="false" baseType="USCore.Observation.ReferenceRange">
@@ -2538,7 +2540,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ProcedureStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="category" elementType="FHIR.CodeableConcept"/>
         <element name="code" elementType="FHIR.CodeableConcept"/>
@@ -2599,11 +2601,11 @@
         <contextRelationship context="Encounter" relatedKeyElement="encounter"/>
         <contextRelationship context="RelatedPerson" relatedKeyElement="actor"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Procedure.FocalDevice" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Procedure.FocalDevice" retrievable="false" baseType="USCore.Procedure.FocalDevice">
         <element name="action" elementType="FHIR.CodeableConcept"/>
         <element name="manipulated" elementType="FHIR.Reference"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Procedure.Performer" retrievable="false" baseType="USQualityCore.BackboneElement">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="Procedure.Performer" retrievable="false" baseType="USCore.Procedure.Performer">
         <element name="function" elementType="FHIR.CodeableConcept"/>
         <element name="actor" elementType="FHIR.Reference"/>
         <element name="onBehalfOf" elementType="FHIR.Reference"/>
@@ -2624,7 +2626,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ProcedureStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="category" elementType="FHIR.CodeableConcept"/>
         <element name="code" elementType="FHIR.CodeableConcept"/>
@@ -2696,7 +2698,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ProcedureStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="category" elementType="FHIR.CodeableConcept"/>
         <element name="code" elementType="FHIR.CodeableConcept"/>
@@ -2752,7 +2754,7 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
         </element>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse" identifier="http://hl7.org/fhir/us/quality-core/StructureDefinition/us-quality-core-questionnaireresponse" label="US Quality Core QuestionnaireResponse" retrievable="true">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse" identifier="http://hl7.org/fhir/us/quality-core/StructureDefinition/us-quality-core-questionnaireresponse" label="US Quality Core QuestionnaireResponse" retrievable="true" baseType="FHIR.QuestionnaireResponse">
         <contextRelationship context="Practitioner" relatedKeyElement="author"/>
         <contextRelationship context="Practitioner" relatedKeyElement="source"/>
         <contextRelationship context="Patient" relatedKeyElement="subject"/>
@@ -2761,7 +2763,7 @@
         <contextRelationship context="RelatedPerson" relatedKeyElement="author"/>
         <contextRelationship context="RelatedPerson" relatedKeyElement="source"/>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse.Item" retrievable="false" baseType="USCore.QuestionnaireResponse.Item">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse.Item" retrievable="false" baseType="FHIR.QuestionnaireResponse.Item">
         <element name="linkId" elementType="FHIR.string"/>
         <element name="definition" elementType="FHIR.uri"/>
         <element name="text" elementType="FHIR.string"/>
@@ -2769,10 +2771,10 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="USQualityCore.QuestionnaireResponse.Item.Answer"/>
         </element>
         <element name="item">
-            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse#QuestionnaireResponse.item"/>
+            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.QuestionnaireResponse.Item"/>
         </element>
     </typeInfo>
-    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse.Item.Answer" retrievable="false" baseType="USCore.QuestionnaireResponse.Item.Answer">
+    <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="QuestionnaireResponse.Item.Answer" retrievable="false" baseType="FHIR.QuestionnaireResponse.Item.Answer">
         <element name="value">
             <elementTypeSpecifier xsi:type="ChoiceTypeSpecifier">
                 <choice xsi:type="NamedTypeSpecifier" namespace="FHIR" name="date"/>
@@ -2785,7 +2787,7 @@
             </elementTypeSpecifier>
         </element>
         <element name="item">
-            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse#QuestionnaireResponse.item"/>
+            <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.QuestionnaireResponse.Item"/>
         </element>
     </typeInfo>
     <typeInfo xsi:type="ClassInfo" namespace="USQualityCore" name="RelatedPerson" identifier="http://hl7.org/fhir/us/quality-core/StructureDefinition/us-quality-core-relatedperson" label="US Quality Core RelatedPerson" retrievable="true" baseType="USCore.RelatedPersonProfile">
@@ -2838,7 +2840,7 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
         <element name="requisition" elementType="FHIR.Identifier"/>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ServiceRequestStatus"/>
         <element name="intent" elementType="FHIR.ServiceRequestIntent"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
@@ -3020,7 +3022,7 @@
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
         <element name="requisition" elementType="FHIR.Identifier"/>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.ServiceRequestStatus"/>
         <element name="intent" elementType="FHIR.ServiceRequestIntent"/>
         <element name="category">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.CodeableConcept"/>
@@ -3347,7 +3349,7 @@
         <element name="partOf">
             <elementTypeSpecifier xsi:type="ListTypeSpecifier" elementType="FHIR.Reference"/>
         </element>
-        <element name="status" elementType="FHIR.code"/>
+        <element name="status" elementType="FHIR.TaskStatus"/>
         <element name="statusReason" elementType="FHIR.CodeableConcept"/>
         <element name="businessStatus" elementType="FHIR.CodeableConcept"/>
         <element name="intent" elementType="FHIR.TaskIntent"/>
